@@ -1027,8 +1027,8 @@
     if (!cell) return;
     ev.preventDefault();
     sizeDragging = true;
-    sizeStart = { r: Number(cell.dataset.row), c: Number(cell.dataset.col) };
-    sizeEnd = { ...sizeStart };
+    sizeStart = { r: 0, c: 0 };
+    sizeEnd = { r: Number(cell.dataset.row), c: Number(cell.dataset.col) };
     updateSizeSelection();
   });
 

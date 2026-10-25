@@ -517,6 +517,7 @@ body {
   background: #fff;
   box-shadow: 0 34px 60px -28px rgba(15, 23, 42, .42);
   animation: popIn .28s cubic-bezier(.2, .9, .3, 1.15) both;
+  container-type: inline-size;
 }
 
 .wizard__head {
@@ -590,6 +591,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
   padding: 11px 10px;
   text-align: left;
   border: 1px solid #e3e9f2;
@@ -626,6 +628,7 @@ body {
   font-weight: 600;
   line-height: 1.2;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 .pick__text {
@@ -1327,6 +1330,19 @@ body {
   }
 
   .about__rules {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* На узком экране карточки карт/уровней не должны вылезать за границы */
+@media (max-width: 640px) {
+  .wizard__grid--3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container (max-width: 340px) {
+  .wizard__grid--3 {
     grid-template-columns: 1fr;
   }
 }
