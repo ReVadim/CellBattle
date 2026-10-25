@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Архитектор — Захват клеток</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="header__row">
+        <h1 class="title">Архитектор</h1>
+        <span class="badge" id="badge">100 клеток</span>
+      </div>
+      <p class="subtitle" id="subtitle">Прямоугольник 10 × 10. Уровень «Лёгкий».</p>
+    </header>
+
+    <div class="game-bar" id="gameBar" hidden>
+      <div class="game-bar__chips">
+        <span class="chip" id="chipMap">Прямоугольник</span>
+        <span class="chip" id="chipMode">2 игрока</span>
+        <span class="chip" id="chipDifficulty">Лёгкий</span>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="exitGame" type="button">Выход</button>
+    </div>
+
+    <section class="hud" aria-label="Счёт игры">
+      <div class="player player--blue" id="card1">
+        <div class="player__top">
+          <span class="player__dot" aria-hidden="true"></span>
+          <span class="player__name" id="name1">Игрок 1</span>
+          <span class="player__tag" id="tag1">ходит</span>
+        </div>
+        <div class="player__score" id="score1">0</div>
+        <div class="player__time" id="time1" hidden>00:00</div>
+      </div>
+
+      <div class="hud__mid">
+        <div class="hud__cap" id="midCap">осталось</div>
+        <div class="hud__num" id="leftCells">100</div>
+      </div>
+
+      <div class="player player--red" id="card2">
+        <div class="player__top">
+          <span class="player__dot" aria-hidden="true"></span>
+          <span class="player__name" id="name2">Игрок 2</span>
+          <span class="player__tag" id="tag2">ходит</span>
+        </div>
+        <div class="player__score" id="score2">0</div>
+        <div class="player__time" id="time2" hidden>00:00</div>
+      </div>
+    </section>
+
+    <section class="board-card">
+      <div class="board-stage">
+        <div class="board" id="board" aria-label="Игровое поле"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="hint" id="hint">4 ребра — клетка твоя, и ход остаётся.</p>
+      <div class="footer__actions" id="footerActions" hidden>
+        <button class="btn btn--ghost" id="newGame" type="button">Новая игра</button>
+      </div>
+    </footer>
+
+    <div class="start" id="start" hidden>
+      <div class="start__card wizard" role="dialog" aria-modal="true" aria-labelledby="wizardTitle">
+        <div class="wizard__head">
+          <p class="wizard__step" id="wizardStepLabel">Шаг 1 из 4</p>
+          <div class="wizard__dots" id="wizardDots" aria-hidden="true">
+            <span class="is-active"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="wizard__panel" data-step="1">
+          <p class="wizard__eyebrow">Захват клеток</p>
+          <h2 class="wizard__title" id="wizardTitle">Архитектор</h2>
+          <p class="wizard__sub">Два игрока или ИИ. Выберите карту и уровень сложности.</p>
+          <button class="start-tile" id="startGameBtn" type="button">
+            <span class="start-tile__title">Начать игру</span>
+            <span class="start-tile__text">Поехали</span>
+          </button>
+          <button class="about-link" id="aboutBtn" type="button">Об игре и правилах</button>
+        </div>
+
+        <div class="wizard__panel" data-step="2" hidden>
+          <h2 class="wizard__title">Кто играет?</h2>
+          <p class="wizard__sub">Выберите режим партии.</p>
+          <div class="wizard__grid wizard__grid--2">
+            <button class="pick" type="button" data-mode="pvp">
+              <span class="pick__title">Два игрока</span>
+              <span class="pick__text">по очереди за экраном</span>
+            </button>
+            <button class="pick" type="button" data-mode="ai">
+              <span class="pick__title">Против ИИ</span>
+              <span class="pick__text">вы — синие, ИИ — красные</span>
+            </button>
+          </div>
+          <button class="wizard__back" type="button" data-back="1">← Назад</button>
+        </div>
+
+        <div class="wizard__panel" data-step="3" hidden>
+          <div id="mapPicker">
+            <h2 class="wizard__title">Выберите карту</h2>
+            <p class="wizard__sub">Форма поля. Уровень сложности — на следующем шаге.</p>
+            <div class="wizard__grid wizard__grid--3">
+              <button class="pick" type="button" data-map="rect">
+                <span class="pick__title">Прямоугольник</span>
+                <span class="pick__text">5×4 … 10×10</span>
+              </button>
+              <button class="pick" type="button" data-map="classic">
+                <span class="pick__title">Классический</span>
+                <span class="pick__text">ромб · 81 клетка</span>
+              </button>
+              <button class="pick" type="button" data-map="random">
+                <span class="pick__title">Произвольный</span>
+                <span class="pick__text">65–85 клеток</span>
+              </button>
+            </div>
+            <button class="wizard__back" type="button" data-back="2">← Назад</button>
+          </div>
+
+          <div id="rectSizePicker" hidden>
+            <h2 class="wizard__title">Размер поля</h2>
+            <p class="wizard__sub">Нажми на клетку и потяни в сторону. Минимум 5 × 4 (или 4 × 5), максимум 10 × 10.</p>
+            <div class="size-grid" id="sizeGrid"></div>
+            <p class="size-info">
+              <strong id="sizeLabel">10 × 10</strong>
+              <span class="size-count" id="sizeCount">100 клеток</span>
+              <span class="size-hint" id="sizeHint"></span>
+            </p>
+            <div class="size-actions">
+              <button class="wizard__back" type="button" id="sizeBack">← Назад</button>
+              <button class="btn btn--sm" type="button" id="sizeNext">Далее</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard__panel" data-step="4" hidden>
+          <h2 class="wizard__title">Выберите уровень сложности</h2>
+          <p class="wizard__sub" id="wizardMapInfo">Прямоугольник · 100 клеток</p>
+          <div class="wizard__grid wizard__grid--3">
+            <button class="pick" type="button" data-difficulty="easy">
+              <span class="pick__title">Лёгкий</span>
+              <span class="pick__text">пусто</span>
+            </button>
+            <button class="pick" type="button" data-difficulty="medium">
+              <span class="pick__title">Средний</span>
+              <span class="pick__text">рёбра</span>
+            </button>
+            <button class="pick" type="button" data-difficulty="hard">
+              <span class="pick__title">Сложный</span>
+              <span class="pick__text">рёбра + серые</span>
+            </button>
+          </div>
+          <button class="wizard__back" type="button" data-back="3">← Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="result" id="result" hidden>
+      <div class="result__card" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+        <p class="result__eyebrow">Игра окончена</p>
+        <h2 class="result__title" id="resultTitle">Ничья</h2>
+        <p class="result__score" id="resultScore"></p>
+        <p class="result__time" id="resultTime" hidden></p>
+        <div class="result__actions">
+          <button class="btn" id="playAgain" type="button">Играть снова</button>
+          <button class="btn btn--ghost" id="resultExit" type="button">Выход</button>
+        </div>
+      </div>
+    </div>
+    <div class="about" id="about" hidden>
+      <div class="about__card" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <div class="about__hero">
+          <img class="about__cover" src="assets/cover.png" alt="Обложка игры Архитектор — захват клеток">
+          <div class="about__hero-shade"></div>
+          <div class="about__hero-text">
+            <p class="about__eyebrow">Стратегическая игра</p>
+            <h2 class="about__title" id="aboutTitle">Архитектор</h2>
+            <p class="about__lead">Захват клеток</p>
+          </div>
+          <button class="about__x" id="aboutCloseTop" type="button" aria-label="Закрыть информацию об игре">×</button>
+        </div>
+
+        <div class="about__body">
+          <p class="about__description">
+            🔹 «Архитектор» — это захватывающая стратегическая игра, где победа зависит от вашей
+            внимательности и тактики! Ваша цель — захватить как можно больше территории на игровом поле.
+            Игроки по очереди ставят рёбра квадратов, а когда вы замыкаете фигуру из четырёх сторон,
+            она становится вашей.
+          </p>
+          <p class="about__description">
+            ✅ Чем больше клеток вы захватили, тем выше ваш счёт! ⚡️ Игра развивает логику, внимание
+            к деталям и умение просчитывать ходы соперника наперёд. 🏆 Сразитесь с искусственным
+            интеллектом или вызовите друзей на дуэль за право называться лучшим стратегом!
+          </p>
+          <p class="about__description about__description--soft">
+            Простые правила, глубокий геймплей и море удовольствия гарантированы.
+          </p>
+
+          <h3 class="about__heading">Правила</h3>
+          <ul class="about__rules">
+            <li>Игроки по очереди проводят рёбра клеток — по одному за ход.</li>
+            <li>Замкнули клетку с четырёх сторон — она ваша, и ход остаётся у вас.</li>
+            <li>Побеждает тот, у кого больше захваченных клеток.</li>
+            <li>Серые клетки уже заняты, очков не дают; игра идёт до заполнения всех игровых клеток.</li>
+            <li>Ластиков нет: нарисованные рёбра не стираются, контур поля неприкосновенен.</li>
+            <li>Клик или тап по клетке с тремя сторонами дорисует четвёртую.</li>
+            <li>В режиме «2 игрока» при чётном числе игровых клеток идёт таймер; при равном счёте побеждает тот, кто потратил меньше времени. При нечётном таймера нет.</li>
+            <li>В режиме «Против ИИ» таймера нет; при равном счёте — ничья.</li>
+            <li>«Выход» сбрасывает партию и возвращает в начало.</li>
+          </ul>
+
+          <div class="about__author">
+            <span>Автор: <strong>@Re_Vadim</strong></span>
+            <a href="https://github.com/revadim" target="_blank" rel="noopener noreferrer">
+              GitHub: github.com/revadim ↗
+            </a>
+          </div>
+
+          <button class="btn about__close" id="aboutClose" type="button">Понятно, играем</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
