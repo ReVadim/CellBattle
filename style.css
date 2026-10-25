@@ -510,7 +510,7 @@ body {
 }
 
 .start__card {
-  width: min(390px, 100%);
+  width: min(460px, 100%);
   padding: 19px 20px 18px;
   border: 1px solid #e9eef6;
   border-radius: 16px;
@@ -1066,7 +1066,7 @@ body {
   }
 
   .start__card {
-    width: min(420px, calc(100vw - 32px));
+    width: min(480px, calc(100vw - 32px));
   }
 
   .result__card {
@@ -1237,10 +1237,6 @@ body {
   font-size: 13px;
   line-height: 1.6;
   color: #44546b;
-}
-
-.about__description--soft {
-  color: #75849a;
 }
 
 .about__heading {
