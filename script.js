@@ -2,7 +2,8 @@
   "use strict";
 
   const MAP_NAMES = { rect: "Прямоугольник", classic: "Классический", random: "Произвольный" };
-  const DIFF_NAMES = { easy: "Лёгкий", medium: "Средний", hard: "Сложный" };
+  // Названия easy/hard переставлены по просьбе: пустое поле теперь «Сложный».
+  const DIFF_NAMES = { easy: "Сложный", medium: "Средний", hard: "Лёгкий" };
 
   const BLUE = "#2563eb";
   const RED = "#dc2626";
